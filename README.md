@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ::: {align="center"}
 
 # Sweety
@@ -466,3 +467,7 @@ build before treating the project as fully verified.
 
 Built with React · Express · Prisma · PostgreSQL
 :::
+=======
+# sweety-blood-glucose-tracker
+Sweety – Blood Glucose Tracker is a full-stack MERN application with PostgreSQL for secure glucose tracking, reading management, and daily/monthly health reports. Built with React, Node.js, Express, and Prisma.
+>>>>>>> c29efbbe2c146e5a2e65cdbe93511ce8bc70959e
