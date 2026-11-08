@@ -1,203 +1,169 @@
-<<<<<<< HEAD
-::: {align="center"}
+<div align="center">
 
-# Sweety
-
+# SWEETY
 ### Blood Glucose Tracker
 
-A secure, full-stack application for recording daily blood glucose
-readings and understanding trends through clear, date-based reports.
+**Track readings. Understand patterns. Stay informed.**
 
-**Built for the Kenpath Junior Full Stack Developer assignment**
+A full-stack blood glucose logging and reporting application built with React, Node.js, Express, Prisma, and PostgreSQL.
 
-[Features](#-features) · [Tech Stack](#-technology-stack) · [Getting
-Started](#-getting-started) · [API](#-api-reference) ·
-[Testing](#-testing) · [Security](#-security)
-:::
+[![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=20232A)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-REST_API-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
+
+**Developed for the Kenpath Junior Full Stack Developer assignment**
+
+[Features](#-key-features) · [Architecture](#-architecture) · [Setup](#-getting-started) · [API](#-api-reference) · [Testing](#-testing) · [Security](#-security--data-integrity)
+
+</div>
 
 ---
 
 ## Overview
 
-Sweety helps users keep their glucose readings organized in one personal
-workspace. Users can create an account, log readings across four daily
-time slots, review their history, and explore daily and monthly
-summaries.
+Sweety gives users a focused place to record daily blood glucose readings, review their history, and view summaries over useful date ranges.
 
-The application uses a React frontend, an Express REST API, Prisma ORM,
-and PostgreSQL. Authentication is handled with bcrypt password hashing
-and a JWT stored in an HTTP-only cookie. Reading data is always scoped
-to the authenticated user.
+Each account has its own private readings. Users can record up to four readings per day—one for each supported time slot—and review daily, month-to-date, and previous-month reports.
 
-## ✨ Features
+The project is built as a React client backed by an Express REST API. Prisma manages database access, PostgreSQL stores application data, and authentication uses bcrypt password hashing with a JWT in an HTTP-only cookie.
 
-### Account and session management
+## ✨ Key Features
 
-- User registration, login, and logout.
-- Password hashing with bcrypt.
-- Session restoration using a signed JWT in an HTTP-only cookie.
-- Protected API routes.
-
-### Glucose reading management
-
-- Create, view, update, and delete readings.
-- Four supported daily time slots:
-  - Morning (fasting)
-  - After breakfast
-  - After lunch
-  - After dinner
-- Glucose values must be whole numbers from **40 to 600 mg/dL**.
-- One reading per time slot per calendar day.
-- Future dates and duplicate slots are rejected.
-- User-specific reading access.
-
-### Reports and insights
-
-- Daily report for a selected date.
-- Month-to-date report, from the first day of the month through the
-  selected date.
-- Monthly report for the complete previous calendar month.
-- Highest, lowest, average (rounded to one decimal place), and reading
-  count.
-- Chart-based data presentation.
-
-### User experience
-
-- Responsive dashboard and navigation.
-- Reading history with pagination.
-- Reading forms with validation feedback.
-- Helpful empty states when no readings are available.
+| Area | Capabilities |
+|---|---|
+| **Authentication** | Registration, login, logout, session restoration, protected routes |
+| **Reading management** | Create, view, update, and delete personal readings |
+| **Daily slots** | Morning fasting, after breakfast, after lunch, after dinner |
+| **Validation** | Whole-number values from 40–600 mg/dL, no future dates, no duplicate daily slots |
+| **Reports** | Daily, month-to-date, and previous-calendar-month summaries |
+| **Insights** | Highest, lowest, average rounded to one decimal place, and reading count |
+| **Experience** | Responsive dashboard, reading history, charts, pagination, validation feedback |
+| **Development** | Prisma migrations, seed script, Docker Compose database, API tests |
 
 ## 🧰 Technology Stack
 
-Layer Technologies
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, React Router |
+| Styling | Tailwind CSS |
+| Charts | Recharts |
+| Backend | Node.js, Express |
+| ORM | Prisma |
+| Database | PostgreSQL |
+| Authentication | bcrypt, JWT, HTTP-only cookies |
+| API testing | Node.js test runner, Supertest |
+| Local infrastructure | Docker Compose |
 
----
-
-Frontend React, Vite, React Router
-Styling Tailwind CSS
-Charts Recharts
-Backend Node.js, Express
-ORM Prisma
-Database PostgreSQL
-Authentication bcrypt, JWT, HTTP-only cookies
-Testing Node.js test runner, Supertest
-Local database Docker Compose
-
-## 🏗️ Application Architecture
+## 🏛️ Architecture
 
 ```text
-┌───────────────────────────────┐
-│         React Client          │
-│     Vite · Router · UI        │
-└───────────────┬───────────────┘
-                │ HTTP / JSON
-                │ Cookie session
-                ▼
-┌───────────────────────────────┐
-│       Express REST API        │
-│ Authentication · Validation  │
-│ Readings · Reports            │
-└───────────────┬───────────────┘
-                │ Prisma ORM
-                ▼
-┌───────────────────────────────┐
-│          PostgreSQL           │
-│ Users · Glucose Readings      │
-└───────────────────────────────┘
+┌──────────────────────────────────────────────┐
+│                  React Client                │
+│             Vite · Router · UI               │
+└──────────────────────┬───────────────────────┘
+                       │ HTTP / JSON
+                       │ HTTP-only session cookie
+                       ▼
+┌──────────────────────────────────────────────┐
+│                Express REST API              │
+│                                              │
+│  Authentication  │  Reading Management       │
+│  Validation      │  Reports                  │
+└──────────────────────┬───────────────────────┘
+                       │ Prisma ORM
+                       ▼
+┌──────────────────────────────────────────────┐
+│                  PostgreSQL                  │
+│             Users · Glucose Readings         │
+└──────────────────────────────────────────────┘
 ```
+
+### Request flow
+
+1. A user signs in through the React client.
+2. The API verifies credentials and issues a signed JWT in an HTTP-only cookie.
+3. Protected requests are authenticated by the API.
+4. Prisma reads or updates records scoped to the authenticated user.
+5. The client displays readings, history, and report summaries.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-Install the following before running the project:
-
-- **Node.js 20 or later**
-- **npm 10 or later**
-- **Docker Desktop** (recommended), or PostgreSQL 15+
-- Git (recommended)
+- Node.js 20+
+- npm 10+
+- Docker Desktop, or PostgreSQL 15+
+- Git
 
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_PUBLIC_REPOSITORY_URL>
+git clone https://github.com/vinaybabannavar-create/sweety-blood-glucose-tracker.git
 cd sweety-blood-glucose-tracker
 ```
 
-Replace `<YOUR_PUBLIC_REPOSITORY_URL>` with the URL of your public
-GitHub repository.
+### 2. Configure environment variables
 
-### 2. Configure the backend environment
-
-Create the backend environment file from the example:
+Create the backend environment file.
 
 **Windows PowerShell**
-
 ```powershell
 Copy-Item server/.env.example server/.env
 ```
 
 **macOS / Linux**
-
 ```bash
 cp server/.env.example server/.env
 ```
 
-Update `server/.env` with your local configuration:
+Set the local development values in `server/.env`:
 
 ```env
 NODE_ENV=development
 PORT=4000
 DATABASE_URL="postgresql://sweety:sweety_dev_password@localhost:5433/sweety?schema=public"
-JWT_SECRET="replace-this-with-a-long-random-secret"
+JWT_SECRET="replace-with-a-long-random-development-secret"
 JWT_EXPIRES_IN=7d
 COOKIE_NAME=sweety_session
 COOKIE_SECURE=false
 CLIENT_ORIGIN=http://localhost:5173
 ```
 
-> **Database port:** The example above uses host port `5433`, which is
-> useful when another PostgreSQL service already occupies `5432`. If
-> port `5432` is available, you can use `5432` instead. Keep the host
-> port in `DATABASE_URL` aligned with the left-hand port in Docker
-> Compose.
+> **Port note:** This configuration uses host port `5433` because port `5432` may already be occupied by a local PostgreSQL service. The Docker Compose mapping and `DATABASE_URL` must use the same host port. If your Docker configuration maps `5432:5432`, change the URL to use port `5432`.
 
-Never commit your real `.env` file or production secrets.
+Never commit `server/.env` or production secrets.
 
 ### 3. Start PostgreSQL
 
-From the project root:
+Run this command from the project root:
 
 ```bash
 docker compose up -d db
 ```
 
-Check the container:
+Check the database container:
 
 ```bash
 docker compose ps
 ```
 
-Wait until the database reports a healthy status before continuing.
+Wait until the database reports `healthy`.
 
-The local Docker database defaults are:
+Local database defaults:
 
-Setting Value
+| Setting | Value |
+|---|---|
+| Database | `sweety` |
+| Username | `sweety` |
+| Password | `sweety_dev_password` |
+| Container port | `5432` |
+| Host port | `5433` in the configuration above |
 
----
+### 4. Install and start the backend
 
-Database `sweety`
-Username `sweety`
-Password `sweety_dev_password`
-Container port `5432`
-Host port `5433` in the configuration above
-
-If you change the Docker host port, update `DATABASE_URL` accordingly.
-
-### 4. Install and initialize the backend
-
-Open a terminal in the project root:
+From the project root:
 
 ```bash
 cd server
@@ -208,19 +174,19 @@ npm run seed
 npm run dev
 ```
 
-The API starts at:
+The API runs at:
 
 ```text
 http://localhost:4000
 ```
 
-Health check:
+Health endpoint:
 
 ```text
 http://localhost:4000/api/health
 ```
 
-A successful health check returns:
+A healthy API responds with:
 
 ```json
 {
@@ -229,7 +195,7 @@ A successful health check returns:
 }
 ```
 
-Keep this terminal running.
+Keep the backend terminal running.
 
 ### 5. Install and start the frontend
 
@@ -243,78 +209,82 @@ npm run dev
 
 Open the application:
 
-```text
-http://localhost:5173
-```
+**http://localhost:5173**
 
-Keep both the backend and frontend development servers running. The Vite
-development server proxies `/api` requests to the backend.
+Keep both development servers running. During local development, Vite proxies `/api` requests to the backend.
 
 ## 🔐 Demo Account
 
-After running the seed command, use the demo account:
+After running `npm run seed`, use the development demo account:
 
-Field Demo value
+| Field | Value |
+|---|---|
+| Email | `demo@sweety.local` |
+| Password | `SweetyDemo123!` |
 
----
+This account is intended for local evaluation only. Change or remove the demo credentials before any public deployment.
 
-Email `demo@sweety.local`
-Password `SweetyDemo123!`
+## 📊 Reading Rules & Reports
 
-The seed script can be run again to restore the demo user's sample data.
-This is a development-only account. Change or remove the demo
-credentials before any public deployment.
+### Supported daily slots
+
+| Slot label | API value |
+|---|---|
+| Morning (fasting) | `morning` |
+| After breakfast | `after_breakfast` |
+| After lunch | `after_lunch` |
+| After dinner | `after_dinner` |
+
+### Validation rules
+
+- Glucose values must be whole numbers between **40 and 600 mg/dL**, inclusive.
+- A reading date cannot be in the future.
+- A user can have only one reading per slot per calendar date.
+- There are four supported slots, so a user can record at most four readings per day.
+- Reading ownership is derived from the authenticated session, not from a client-supplied user ID.
+
+### Report definitions
+
+| Report | Date range |
+|---|---|
+| Daily | The selected calendar date |
+| Month to date | First day of the selected month through the selected date |
+| Monthly | The complete previous calendar month |
+
+Each report provides the highest value, lowest value, average rounded to one decimal place, and reading count.
 
 ## 📡 API Reference
 
-All API routes are prefixed with `/api`.
+All endpoints are prefixed with `/api`.
 
 ### Authentication
 
-Method Endpoint Authentication Description
-
----
-
-`POST` `/auth/register` No Create an account
-`POST` `/auth/login` No Sign in
-`POST` `/auth/logout` No End the session
-`GET` `/auth/me` Yes Get the current user
+| Method | Endpoint | Auth required | Purpose |
+|---|---|:---:|---|
+| `POST` | `/auth/register` | No | Create an account |
+| `POST` | `/auth/login` | No | Start a session |
+| `POST` | `/auth/logout` | No | End a session |
+| `GET` | `/auth/me` | Yes | Return the current user |
 
 ### Readings
 
-Method Endpoint Authentication Description
+| Method | Endpoint | Auth required | Purpose |
+|---|---|:---:|---|
+| `GET` | `/readings` | Yes | List the user's readings |
+| `POST` | `/readings` | Yes | Create a reading |
+| `GET` | `/readings/:id` | Yes | Get one owned reading |
+| `PUT` | `/readings/:id` | Yes | Update an owned reading |
+| `DELETE` | `/readings/:id` | Yes | Delete an owned reading |
 
----
-
-`GET` `/readings` Yes List readings
-`POST` `/readings` Yes Create a reading
-`GET` `/readings/:id` Yes Get one owned reading
-`PUT` `/readings/:id` Yes Update an owned reading
-`DELETE` `/readings/:id` Yes Delete an owned reading
-
-The list endpoint supports query parameters such as `page`, `limit`,
-`date`, `from`, and `to`.
+The list endpoint supports query parameters including `page`, `limit`, `date`, `from`, and `to`.
 
 ### Reports
 
----
-
-Method Endpoint Authentication Description
-
----
-
-`GET` `/reports/daily?date=YYYY-MM-DD` Yes Selected-day
-summary
-
-`GET` `/reports/month-to-date?date=YYYY-MM-DD` Yes First of month
-through selected
-date
-
-`GET` `/reports/monthly?date=YYYY-MM-DD` Yes Complete
-previous
-calendar month
-
----
+| Method | Endpoint | Auth required | Purpose |
+|---|---|:---:|---|
+| `GET` | `/reports/daily?date=YYYY-MM-DD` | Yes | Selected-day summary |
+| `GET` | `/reports/month-to-date?date=YYYY-MM-DD` | Yes | Month start through selected date |
+| `GET` | `/reports/monthly?date=YYYY-MM-DD` | Yes | Previous calendar month |
 
 ### Example reading payload
 
@@ -326,7 +296,7 @@ calendar month
 }
 ```
 
-Allowed `timeSlot` values:
+The API accepts these `timeSlot` values:
 
 ```text
 morning
@@ -335,15 +305,13 @@ after_lunch
 after_dinner
 ```
 
-The API derives the user identity from the verified session. A
-client-supplied `userId` is not trusted.
+The API determines the user identity from the verified session. A client-provided `userId` is not treated as the authority for record ownership.
 
-## 🧪 Testing
+## 🧪 Testing & Verification
 
 ### Backend automated tests
 
-Make sure PostgreSQL is running and `server/.env` is configured. Then
-run:
+With PostgreSQL running and `server/.env` configured:
 
 ```bash
 cd server
@@ -352,122 +320,126 @@ npm test
 
 The backend test suite uses Node's built-in test runner and Supertest.
 
-The verified local test run covers: - User registration and
-authenticated session creation. - Authentication enforcement on reading
-routes. - Reading creation and duplicate-slot rejection. - Rejection of
-glucose values outside the allowed range.
+**Verified local test coverage:**
 
-**Latest local result:** 4 tests passed, 0 failed.
+- User registration and authenticated session creation.
+- Authentication enforcement on reading routes.
+- Reading creation and duplicate-slot rejection.
+- Rejection of glucose values outside the allowed range.
 
-> This result reflects the test run performed during development. Run
-> the tests again after making changes and before submitting.
+**Latest recorded local result:**
 
-### Frontend build check
+| Result | Count |
+|---|---:|
+| Passed | 4 |
+| Failed | 0 |
 
-The client currently provides a production build script:
+Run the test suite again after code changes and before submitting.
+
+### Frontend production build
+
+The client includes a production build command:
 
 ```bash
 cd client
 npm run build
 ```
 
-The client package does not currently define an `npm test` script. Use
-browser-based functional checks for the UI unless frontend tests are
-added.
+The current client package does not define an `npm test` script. Use browser-based functional checks for the frontend unless automated UI tests are added.
 
-### Manual verification checklist
+### Manual QA checklist
 
-- [ ] Register a new account and sign in.
+- [ ] Register a new account.
+- [ ] Sign in and restore the session after refresh.
 - [ ] Sign out and verify protected pages require authentication.
-- [ ] Add a reading for each of the four time slots.
-- [ ] Edit and delete a reading.
-- [ ] Try a value below 40 and above 600.
-- [ ] Try a decimal value and a future date.
-- [ ] Try to add the same slot twice on one date.
-- [ ] Verify that a fifth reading cannot be added to the same day.
+- [ ] Add a reading for each of the four daily slots.
+- [ ] Edit a reading and verify the updated value.
+- [ ] Delete a reading and verify it disappears.
+- [ ] Try values below 40 and above 600.
+- [ ] Try a decimal value, blank value, and future date.
+- [ ] Try adding the same slot twice on one date.
+- [ ] Verify a fifth reading cannot be added to the same day.
 - [ ] Verify daily, month-to-date, and previous-month reports.
-- [ ] Verify that one user cannot access another user's readings.
+- [ ] Verify one account cannot access another account's readings.
+- [ ] Check browser console and Network tab for failed requests.
 
-## 🛡️ Security and Data Integrity
+## 🛡️ Security & Data Integrity
 
-- Passwords are hashed with bcrypt; plain-text passwords are not
-  stored.
+- Passwords are hashed with bcrypt; plain-text passwords are not stored.
 - JWT session tokens are stored in HTTP-only cookies.
 - Protected endpoints require a valid authenticated session.
 - Reading queries are scoped to the authenticated user.
 - Server-side validation checks dates, slots, and glucose values.
-- PostgreSQL constraints enforce allowed glucose ranges, valid slots,
-  and uniqueness per user/date/slot.
-- The API does not accept a client-provided user ID as the authority
-  for reading ownership.
+- PostgreSQL constraints enforce the allowed value range, valid slots, and uniqueness per user/date/slot.
+- The API does not trust a client-supplied user ID for reading ownership.
 - Environment files and secrets must remain out of version control.
 
-### Production hardening
+### Production hardening considerations
 
-Before a production deployment, configure HTTPS, `COOKIE_SECURE=true`, a
-strong secret, and the correct frontend origin. Also consider rate
-limiting, CSRF protection appropriate to the cookie strategy, email
-verification, password reset, structured logging, monitoring, and
-managed database backups.
+Before production deployment:
 
-## 📁 Environment Configuration
+- Use HTTPS and set `COOKIE_SECURE=true`.
+- Generate a strong, private JWT secret.
+- Configure the correct frontend origin.
+- Add rate limiting and CSRF protection appropriate to the cookie strategy.
+- Consider email verification and password reset flows.
+- Add structured logging, monitoring, and managed database backups.
 
-Backend variables are documented in `server/.env.example`.
+## 🗂️ Project Structure
 
-Variable Purpose
+```text
+sweety-blood-glucose-tracker/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── package.json
+│   └── vite.config.js
+├── server/
+│   ├── prisma/
+│   │   ├── migrations/
+│   │   ├── schema.prisma
+│   │   └── seed.js
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── tests/
+│   └── package.json
+├── docker-compose.yml
+├── .gitignore
+└── README.md
+```
 
----
+## 📝 Engineering Decisions & Scope
 
-`NODE_ENV` Runtime environment
-`PORT` Express API port
-`DATABASE_URL` PostgreSQL connection string
-`JWT_SECRET` Secret used to sign session tokens
-`JWT_EXPIRES_IN` Session token lifetime
-`COOKIE_NAME` Authentication cookie name
-`COOKIE_SECURE` Whether the cookie requires HTTPS
-`CLIENT_ORIGIN` Allowed frontend origin
+- **Calendar-date storage:** Reading dates use the `YYYY-MM-DD` calendar-date format and PostgreSQL `DATE` storage to avoid unintended day shifts from timestamp timezone conversion.
+- **Database-level uniqueness:** A unique user/date/slot constraint protects against duplicate entries, including concurrent requests.
+- **Previous-month semantics:** The monthly report covers the complete previous calendar month.
+- **Focused assignment scope:** Redis caching, background queues, and doctor-role workflows are not included. The implementation prioritizes the core personal tracking and reporting requirements.
 
-The frontend uses `VITE_API_BASE_URL` only when the API is hosted on a
-different origin. For local development, leave it empty and use the Vite
-proxy.
-
-## 📝 Design Decisions and Scope
-
-- **Calendar dates:** Reading dates are represented as `YYYY-MM-DD`
-  calendar dates and stored using PostgreSQL's `DATE` type to avoid
-  accidental day shifts caused by timestamp timezone conversion.
-- **Four readings per day:** The four allowed time slots and the
-  unique user/date/slot constraint prevent duplicate entries and
-  naturally cap a day at four readings.
-- **Monthly reporting:** The monthly report represents the entire
-  previous calendar month.
-- **Average calculation:** The average is calculated from the readings
-  in the selected reporting period and rounded to one decimal place.
-- **Focused scope:** Redis caching, background queues, and doctor-role
-  workflows are not included; the implementation focuses on the
-  required personal tracking and reporting workflow.
-
-> Sweety is a personal logging and reporting application. It is not a
-> medical device and does not provide diagnosis, treatment
-> recommendations, or clinical interpretation. Users should consult a
-> qualified healthcare professional about their readings.
+> **Health disclaimer:** Sweety is a personal logging and reporting application, not a medical device. It does not diagnose conditions, interpret readings clinically, or provide treatment advice. Consult a qualified healthcare professional about health concerns and glucose readings.
 
 ## 📌 Project Status
 
-The application has been started locally, the PostgreSQL database has
-been migrated and seeded, the API health endpoint has been verified, and
-the backend automated test suite has passed its current four tests.
-Complete the remaining manual validation checklist and client production
-build before treating the project as fully verified.
+The project has been run locally. PostgreSQL migrations and seed data were applied, the API health endpoint was verified, and the current backend automated test suite passed **4 tests with 0 failures**. Complete the remaining manual QA checklist and client production build before describing the entire application as fully verified.
 
 ---
 
-::: {align="center"}
-**Sweety -- Blood Glucose Tracker**
+<div align="center">
 
-Built with React · Express · Prisma · PostgreSQL
-:::
-=======
-# sweety-blood-glucose-tracker
-Sweety – Blood Glucose Tracker is a full-stack MERN application with PostgreSQL for secure glucose tracking, reading management, and daily/monthly health reports. Built with React, Node.js, Express, and Prisma.
->>>>>>> c29efbbe2c146e5a2e65cdbe93511ce8bc70959e
+### SWEETY — Blood Glucose Tracker
+
+**React · Node.js · Express · Prisma · PostgreSQL**
+
+Built with care as a full-stack development project.
+
+[Back to top](#sweety)
+
+</div>
